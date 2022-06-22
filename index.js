@@ -20,5 +20,5 @@ function each(collection, action) {
             action(collection[key], key, collection);
         }
     }
-}
+} yz
 module.exports.each = each;
