@@ -433,93 +433,216 @@ module.exports.map = map;
  * pluck: Designed to take in an array of object and return an array of object values that match a given property
  * 
  * @param {Array} array: An array of objects that will be iterated over to find a specific property in each object element
- * @param {Value} proptery: A object property name that the function will use to match to properties in each object in the arry
+ * @param {Value} property: A object property name that the function will use to match to properties in each object in the arry
  * 
- * @return {Array}:
+ * @return {Array}:A new array of values from the array that matched a given property
  * 
  * Usage:
+ *      pluck([{name: 'John', age: 20}, {name: 'Erica', age: 35}], 'name') 
+ *      -> ['John', 'Erica']
  * 
- * 
- * 
- * 
+ *      pluck([{species: 'dog', name: 'Fudgy', likesWater: true}, {species: 'cat', name: 'Noodles', likesWater: false}, 'likesWater')
+ *      -> [true, false]
  */
-
+function pluck(array, property){
+    //create variable with value of empty array
+    let output = [];
+    //use for loop to iterate through object
+    for(let i = 0; i < array.length; i++){
+        //determine if object contains key of property argument
+        //in current element into output array
+        if(array[i].hasOwnProperty(property)){
+            output.push(array[i][property]);
+        }
+    }
+    //return output array
+    return output;
+}
+module.exports.pluck = pluck;
 
 /**
- * name
+ * every: Designed to determine if each value in an array returns true when called by a function
+ * - if one or more values are returned false, the function will return false
+ * - all elements must return true in order for the function to return true
  * 
- * @param
- * @param
+ * @param {Array or Object} collection: the array or object whose values/elements will each be passed through a test function
+ * @param {Function} func: the function that will return true or false when passed through an element in give collection
  * 
- * @return
+ * @return {Boolean}: if all values/elements of collection return true when passed through the function, it will return the Boolean true
+ * otherise, if even ONE value returns true, the every function will imediately return false
  * 
  * Usage:
  * 
- * 
- * 
- * 
+ *      every([2,4,6], function(e){return e % 2 === 0}) -> true
+ *      every([2, 3, 4, 6, 8], function(e){return e % 2 === 0}) -> false
  */
-
+function every(collection, func){
+    //determine if collection is an array
+    if(!func){
+        //determine if collection is an array
+      if(Array.isArray(collection)){
+        //create for loop to iterate through element
+        for(let i = 0; i < collection.length; i++){
+            if(collection[i] === false){
+                return false;
+            }
+        }
+      }
+        //else, will be an object
+      else{
+        //use for in loop to iterate through key values
+        for (let key in collection){
+            if(collection[key] === false){
+                return false;
+            }
+        }
+      }
+    }
+    else if(Array.isArray(collection)){
+        //use for loop to iterate though elements in collection
+        for(let i = 0; i < collection.length; i++){
+            //use collection element, index, and collection as arguments to call fuction on each element
+            //determine if current element returns false, immediately return false
+            if(func(collection[i], i, collection) === false){
+                return false;
+            }
+        }     
+    }   
+    else {
+        //else, collection will be an object
+        //use for in loop to iterate through key-value pairs in collection
+        for(let key in collection){
+            //determine if current element in collection returns false when the function is called false
+            //if so, immediately return false
+            if(func(collection[key], key, collection) === false){
+                return false;
+            }
+        }
+    }      
+    //return true
+    return true;
+}
+module.exports.every = every;
 
 /**
- * name
+ * some: Designed to iterate through each value/element from a given Object or Array and 
+ * determine if ANY value in the collection return true when passed through a callback function
  * 
- * @param
- * @param
+ * @param {Array or Object} collection: the array or object that the function will iterate through and test with a function
+ * @param {Function} func: the callback function that test the truthiness of each element/value in the collection
  * 
- * @return
+ * @return {Boolean}: returns a boolean value (true or false)
+ * -if at least one element/value in the collection returns true when being called, the function immediately returns true
+ * -otherwise it will return false
  * 
  * Usage:
- * 
- * 
- * 
- * 
+ *          some(['hello', 'hello', 'goodbye'], function(e){return e === 'goodbye') -> true
+ *          some(['hello', 'hello', 'bye'], function(e){return e === 'goodbye') -> false
  */
-
+function some(collection, func){
+    if(!func){
+        //determine if collection is an array
+      if(Array.isArray(collection)){
+        //create for loop to iterate through element
+        for(let i = 0; i < collection.length; i++){
+            if(collection[i] === true){
+                return true;
+            }
+        }
+      }
+        //else, will be an object
+      else{
+        //use for in loop to iterate through key values
+        for (let key in collection){
+            if(collection[key] === true){
+                return true;
+            }
+        }
+      }
+    }
+    else if(Array.isArray(collection)){
+        //use for loop to iterate though elements in collection
+        for(let i = 0; i < collection.length; i++){
+            //use collection element, index, and collection as arguments to call fuction on each element
+            //determine if current element returns false, immediately return false
+            if(func(collection[i], i, collection) === true){
+                return true;
+            }
+        }     
+    }   
+    else {
+        //else, collection will be an object
+        //use for in loop to iterate through key-value pairs in collection
+        for(let key in collection){
+            //determine if current element in collection returns false when the function is called false
+            //if so, immediately return false
+            if(func(collection[key], key, collection) === true){
+                return true;
+            }
+        }
+    }      
+    //return true
+    return false;
+}
+module.exports.some = some;
 
 /**
- * name
+ * reduce: Designed to create an accumulated value once the elements of Array are iterated over and each called with a function
  * 
- * @param
- * @param
+ * @param {Array} array: the array that the function will iterate over and 
+ * gather an accumulated value while when the functio is called on each element
+ * @param {Function} func: the callback function that will return an updated, acculated value to return to the function
+ * @param {Value} seed: the default starting value of the value that the function will begin iterating with
  * 
- * @return
+ * @return {Value}: returns a single value that represents the accumulated value
+ *  once the function has has been called on each element of the array
  * 
  * Usage:
- * 
- * 
- * 
- * 
+ *       reduce([2,3], function(previousSum, currentValue, currentIndex){ return previousSum + currentValue }, 0) -> 5
+ *       reduce([1, 4, 6] function(accumulator, current, index){ return accumulator - current}, 20) -> 9
  */
-
+function reduce(array, func, seed){
+    //create output variable
+    var output;
+    //determine if seed was not passed in
+    if(seed === undefined){
+        output = array[0];
+        for(var i = 1; i < array.length; i++){
+            output = func(output, array[i], i);        
+        }
+    }
+    //else it was passed in
+    else{
+        output = seed;
+        for(var i = 0; i < array.length; i++){
+            output = func(output, array[i], i);
+        }
+    }
+    return output;
+}
+module.exports.reduce = reduce;
 
 /**
- * name
+ * extend: Designed to start with an object, then adds a copy of remaining Objects' key value pairs into the first Object.
+ * -this function is designed to take in an indefinite amount of objects beyond the first two.
+ * @param {Object} obj1: the initial object that will be updated with additional key/value pairs from the other provided object
+ * @param {Object} obj2: an object that's key/value pairs will be copied and put into obj1
+ * @param {Object} ...moreObj: can take in an indefinite amount of Objects to add more key value pairs to the initial object
  * 
- * @param
- * @param
- * 
- * @return
- * 
- * Usage:
- * 
- * 
- * 
- * 
- */
-
-
-/**
- * name
- * 
- * @param
- * @param
- * 
- * @return
+ * @return {Object}: returns obj1 updated with the additional key/value pairs that were in the other subsequent objects
  * 
  * Usage:
- * 
- * 
- * 
- * 
+ *      let myPet = {name: Miso}
+ *      extend(myPet, {breed: 'Ragdoll', likesBellyScratches: false}); 
+ *      -> myPet now equals {name: 'Miso', breed: 'Ragdoll', likesBellyScratches: false}
+ *      let person = {name: 'Anna Banana', occupation: 'zookeeper'}
+ *      extend(person, {favAnimal: 'manatees'}); 
+ *      -> person now equals {name: 'Anna Banana', occupation: 'zookeeper', favAnimal: 'manatees'}
  */
+function extend(obj1, obj2, ...moreObj){
+    //use for in loop to iterate over obj1
+    Object.assign(obj1, obj2, ...moreObj);
+    return obj1;
+}
+module.exports.extend = extend;
+
