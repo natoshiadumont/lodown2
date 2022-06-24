@@ -86,7 +86,8 @@ function typeOf(value) {
     module.exports.typeOf = typeOf;
 
 /**
- * first: Designed to return an Array of a given number of elements from the original array
+ * first: Designed to return an Array of a given number of elements 
+ * starting from the first element in the original array
  * 
  * @param {Array} array: The Array that will be iterated over to return a new Array 
  * @param {Number} num: a number representing how many elements will be copied,
@@ -295,7 +296,7 @@ module.exports.unique = unique;
 
 /**
  * filter: Designed to iterate over an array with a callback function,
- * then create a new Array with only the elements that return true
+ * then creates a new Array including only the elements that return true when passed through the function
  * 
  * @param {Array} array: the array that's elements will be tested with a callback function
  * @param {Function} func: the callback function that will be called on each element of the Array
@@ -388,7 +389,10 @@ module.exports.partition = partition;
 
 /**
  * map: Designed to take in an array or object (collection); 
- * the function iterates over each element/value in the given collection, and return the 'transformed' collection 
+ * the function iterates over each element/value in the given collection
+ * once each element is passed through the function, it is then pushed into 
+ * a new array, which is then returned
+ * 
  * 
  * @param {Array or Object} collection: the collection that will be iterated over in the function
  * @param {Function} func: the function that will be called to alter each element/value in the collection
